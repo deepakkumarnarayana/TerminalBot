@@ -1,0 +1,127 @@
+# TerminalBot Default Configuration
+
+llm:
+  # Primary LLM provider (ollama, openai, anthropic, or null for lite mode)
+  primary: ollama
+
+  # Fallback provider if primary fails
+  fallback: openai
+
+  # Enable lite mode (no LLM, rule-based only)
+  enable_lite_mode: false
+
+  # Ollama (local LLM) configuration
+  ollama:
+    model: llama3.2:1b  # Lightweight: 1.3GB RAM, fast inference
+    # Alternative models:
+    #   - qwen2.5:0.5b (500MB RAM, ultra-light)
+    #   - llama3.2:3b (2.4GB RAM, more capable)
+    base_url: http://localhost:11434
+    timeout: 10  # seconds
+
+  # OpenAI configuration
+  openai:
+    model: gpt-4o-mini  # Cheaper, faster than gpt-4-turbo
+    api_key: env:OPENAI_API_KEY
+    max_tokens: 2000
+    temperature: 0.1  # Low for consistent, factual responses
+
+  # Anthropic Claude configuration
+  anthropic:
+    model: claude-3-5-haiku-20241022  # Fastest, cheapest Claude
+    api_key: env:ANTHROPIC_API_KEY
+    max_tokens: 2000
+    temperature: 0.1
+
+# Command execution settings
+execution:
+  # Maximum time for command execution (seconds)
+  command_timeout: 30
+
+  # Maximum output size per command (bytes)
+  max_output_size: 10485760  # 10MB
+
+  # Maximum concurrent commands
+  max_concurrent_commands: 3
+
+  # Working directory (null = use current directory)
+  working_directory: null
+
+# Safety settings
+safety:
+  # Require confirmation for destructive commands
+  require_confirmation: true
+
+  # Protected process names (never kill without explicit override)
+  protected_processes:
+    - systemd
+    - init
+    - sshd
+    - NetworkManager
+    - dbus-daemon
+
+  # Protected PIDs
+  protected_pids:
+    - 1  # init/systemd
+
+  # Commands that always require confirmation
+  dangerous_commands:
+    - rm
+    - kill
+    - killall
+    - pkill
+    - systemctl stop
+    - systemctl disable
+    - systemctl mask
+    - reboot
+    - shutdown
+    - poweroff
+
+# Output formatting
+output:
+  # Use rich formatting
+  use_rich: true
+
+  # Color scheme
+  theme: auto  # auto, dark, light
+
+  # Show timestamps
+  show_timestamps: true
+
+  # Truncate long output
+  truncate_long_output: true
+  max_output_lines: 100
+
+# Logging
+logging:
+  # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  level: INFO
+
+  # Log file path (null = no file logging)
+  file: null
+
+  # Log command history
+  log_commands: true
+  history_file: ~/.terminalbot_history
+
+# Plugin settings
+plugins:
+  # Automatically load plugins
+  autoload: true
+
+  # Plugin directories (in addition to built-in)
+  additional_dirs: []
+
+  # Disabled plugins
+  disabled: []
+
+# Performance tuning
+performance:
+  # Cache LLM responses (seconds, 0 = disabled)
+  cache_ttl: 3600
+
+  # Lazy load LLM (only load when needed)
+  lazy_load_llm: true
+
+  # Use asyncio for command execution
+  async_execution: true
